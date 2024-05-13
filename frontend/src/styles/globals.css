@@ -13,3 +13,8 @@ body {
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background-color: #f5f5f5;
 }
+
+header a {
+  color: white;
+  text-decoration: none;
+}

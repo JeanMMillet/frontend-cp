@@ -1,3 +1,9 @@
+import ListCountries from "@/components/ListCountries";
+
 export default function Home() {
-  return <h1>Hello, wilder !</h1>;
+  return (
+    <div>
+      <ListCountries />
+    </div>
+  );
 }
