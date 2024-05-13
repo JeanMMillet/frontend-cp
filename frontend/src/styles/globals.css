@@ -18,3 +18,8 @@ header a {
   color: white;
   text-decoration: none;
 }
+
+form input:invalid{
+  border: red 1px solid;
+}
+

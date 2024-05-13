@@ -11,6 +11,7 @@ const StyledButton = styled.button`
   border: none;
   border-radius: 4px;
   color: white;
+  cursor: pointer;
 `;
 
 const StyledForm = styled.form`
@@ -51,6 +52,7 @@ type ContinentData = {
 };
 export const AddCountry = () => {
   const router = useRouter();
+
   const [getContinents, { data, error, loading }] =
     useLazyQuery<ContinentData>(LIST_CONTINENTS);
   useEffect(() => {
@@ -63,12 +65,9 @@ export const AddCountry = () => {
     emoji: "",
   });
   const [addCountry] = useMutation(ADD_COUNTRY, {
-    onCompleted(data) {
+    onCompleted() {
       router.reload();
       resetForm();
-    },
-    onError(error) {
-      console.log("error", error);
     },
   });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,68 +91,83 @@ export const AddCountry = () => {
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("dataForm", dataForm);
     addCountry({
       variables: {
         data: dataForm,
       },
     });
   };
-  return (
-    <StyledForm onSubmit={handleSubmit}>
-      <StyledInputWrapper>
-        <label>
-          Name <br />
-          <input
-            type="text"
-            name="name"
-            id="name"
-            onChange={handleChange}
-            value={dataForm.name}
-          />
-        </label>
-        <label>
-          Emoji <br />
-          <input
-            type="text"
-            name="emoji"
-            id="emoji"
-            onChange={handleChange}
-            value={dataForm.emoji}
-          />
-        </label>
-        <label>
-          Code <br />
-          <input
-            type="text"
-            name="code"
-            id="code"
-            onChange={handleChange}
-            value={dataForm.code}
-          />
-        </label>
-        <label>
-          Continent <br />
-          <select
-            name="continent"
-            id="continent"
-            onChange={handleSelect}
-            value={dataForm.continent?.id || ""}
-          >
-            <option value="">- Select a continent - </option>
-            {loading
-              ? "Loading"
-              : error
-              ? "Error fetching continent"
-              : data?.continents &&
-                data.continents.map((continent) => {
-                  return <option value={continent.id}>{continent.name}</option>;
-                })}
-          </select>
-        </label>
-      </StyledInputWrapper>
 
-      <StyledButton type="submit">Add Country</StyledButton>
-    </StyledForm>
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+    >
+      <StyledForm onSubmit={handleSubmit}>
+        <StyledInputWrapper>
+          <label>
+            Name <br />
+            <input
+              type="text"
+              name="name"
+              id="name"
+              onChange={handleChange}
+              value={dataForm.name}
+              minLength={2}
+              maxLength={30}
+            />
+          </label>
+          <label>
+            Emoji <br />
+            <input
+              type="text"
+              name="emoji"
+              id="emoji"
+              onChange={handleChange}
+              value={dataForm.emoji}
+              maxLength={4}
+            />
+          </label>
+          <label>
+            Code <br />
+            <input
+              type="text"
+              name="code"
+              id="code"
+              onChange={handleChange}
+              value={dataForm.code}
+              minLength={2}
+              maxLength={3}
+            />
+          </label>
+          <label>
+            Continent <br />
+            <select
+              name="continent"
+              id="continent"
+              onChange={handleSelect}
+              value={dataForm.continent?.id || ""}
+            >
+              <option value="">- Select a continent - </option>
+              {loading
+                ? "Loading"
+                : error
+                ? "Error fetching continent"
+                : data?.continents &&
+                  data.continents.map((continent) => {
+                    return (
+                      <option value={continent.id}>{continent.name}</option>
+                    );
+                  })}
+            </select>
+          </label>
+        </StyledInputWrapper>
+
+        <StyledButton type="submit">Add Country</StyledButton>
+      </StyledForm>
+    </div>
   );
 };
